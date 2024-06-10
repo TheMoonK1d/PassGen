@@ -1,5 +1,7 @@
 ﻿package com.themoonk1d.passgen.screen
 
+import android.app.Activity
+import android.content.Context
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,10 +19,15 @@ import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Slider
+import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -83,7 +90,7 @@ fun InformationCard(
                 .fillMaxWidth()
         ) {
             IconButton(
-                onClick = { }
+                onClick = action
             ) {
                 Icon(
                     image,
@@ -113,7 +120,8 @@ fun InformationCard(
 @Composable
 fun PasswordApp(
     modifier: Modifier = Modifier,
-    passwordViewModel: PasswordViewModel = viewModel()
+    passwordViewModel: PasswordViewModel = viewModel(),
+    ctx : Context
 ){
     val passwordUiState by passwordViewModel.uiState.collectAsState()
     Column (
@@ -127,16 +135,20 @@ fun PasswordApp(
         Spacer(modifier = modifier.weight(1f))
         InformationCard(
             information = passwordUiState.passwordText,
-            action = {},
+            action = {
+                passwordViewModel.copyToClipboard(ctx, "My Copied Text", passwordUiState.passwordText)
+                     },
             image = painterResource(id = R.drawable.round_content_copy_24),
             title = stringResource(id = R.string.password)
         )
         InformationCard(
             information = when(passwordUiState.passwordText.length){
-                in 4..6 -> stringResource(id = R.string.bad)
-                in 7..16 -> stringResource(id = R.string.not_bad)
-                in 17..32 -> stringResource(id = R.string.good)
-                in 33..64 -> stringResource(id = R.string.very_good)
+                in 4..6 -> stringResource(id = R.string.very_bad)
+                in 7..12 -> stringResource(id = R.string.bad)
+                in 13..16 -> stringResource(id = R.string.not_bad)
+                in 17..20 -> stringResource(id = R.string.good)
+                in 33..41 -> stringResource(id = R.string.very_good)
+                in 42..64 -> stringResource(id = R.string.schizo)
                 else -> stringResource(id = R.string.unknown)
                 },
             action = {},
@@ -144,11 +156,14 @@ fun PasswordApp(
             title = stringResource(id = R.string.Strength)
         )
         Spacer(modifier = modifier.weight(1f))
+        PasswordLengthSlider(
+            pos = passwordUiState.passwordLength.toFloat(),
+            passwordViewModel = passwordViewModel
+        )
         Button(
             onClick = {
                 passwordViewModel.setPassword()
-            }
-            ,
+            },
             modifier = Modifier.padding(top = 16.dp, bottom = 24.dp)
         ) {
             Text(text = stringResource(id = R.string.Re_generate))
@@ -156,11 +171,37 @@ fun PasswordApp(
     }
 }
 
-@Preview(showSystemUi = true)
 @Composable
-fun PasswordAppPreview(){
-    PassGenTheme {
-        PasswordApp()
+fun PasswordLengthSlider(
+    modifier: Modifier = Modifier,
+    passwordViewModel: PasswordViewModel,
+    pos : Float
+) {
+    var position by remember { mutableFloatStateOf(pos) }
+    Column(modifier = modifier.padding(top = 16.dp)) {
+        Text(text = stringResource(id = R.string.slide) + " " +position.toInt().toString())
+        Slider(
+            value = position,
+            onValueChange = {
+                position = it
+                passwordViewModel.setPasswordLength(it.toInt())
+                            },
+            colors = SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.secondary,
+                activeTrackColor = MaterialTheme.colorScheme.secondary,
+                inactiveTrackColor = MaterialTheme.colorScheme.secondaryContainer,
+            ),
+            steps = 0,
+            valueRange = 4f..64f
+        )
     }
 }
+
+//@Preview(showSystemUi = true)
+//@Composable
+//fun PasswordAppPreview(){
+//    PassGenTheme {
+//        PasswordApp()
+//    }
+//}
 

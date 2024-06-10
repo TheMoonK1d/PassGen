@@ -22,37 +22,9 @@ class MainActivity : ComponentActivity() {
         setContent {
             PassGenTheme {
                 Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    PasswordApp(modifier = Modifier.padding(innerPadding) )
+                    PasswordApp(modifier = Modifier.padding(innerPadding), ctx = this )
                 }
             }
         }
     }
 }
-
-@Preview(
-    showSystemUi = true,
-    showBackground = true,
-)
-@Composable
-fun PassGenPreview(){
-    PassGenTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            PasswordApp(modifier = Modifier.padding(innerPadding) )
-        }
-    }
-}
-
-@Preview(
-    showSystemUi = true,
-    showBackground = true,
-    uiMode = Configuration.UI_MODE_NIGHT_YES
-)
-@Composable
-fun PassGenPreviewDark(){
-    PassGenTheme {
-        Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-            PasswordApp(modifier = Modifier.padding(innerPadding) )
-        }
-    }
-}
-

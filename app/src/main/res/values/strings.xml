@@ -1,12 +1,15 @@
 <resources>
     <string name="app_name">PassGen</string>
-    <string name="version">v 0.01 (Alpha)</string>
+    <string name="version">v 0.05 (Beta)</string>
     <string name="password">Password</string>
     <string name="Strength">Strength</string>
     <string name="not_bad">Not bad</string>
     <string name="good">Good</string>
     <string name="bad">Bad</string>
-    <string name="very_good">Very good</string>
-    <string name="unknown">Unknown</string>
+    <string name="very_bad">Very Bad</string>
+    <string name="very_good">Very Secure</string>
+    <string name="schizo">Schizo</string>
+    <string name="unknown">Very good</string>
+    <string name="slide">Adjust length </string>
     <string name="Re_generate">Re-generate</string>
 </resources>
